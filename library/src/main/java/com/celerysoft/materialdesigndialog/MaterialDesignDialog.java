@@ -24,11 +24,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 /**
- * Created by Administrator on 2015-11-12.
+ * Created by CelerySoft on 2015-11-12.
+ * Material Design Dialog
  */
 public class MaterialDesignDialog {
-    private boolean mCancel;
     private Context mContext;
+    private boolean mCancelable;
     private Dialog mAlertDialog;
     private MaterialDesignDialog.Builder mBuilder;
     private View mView;
@@ -209,9 +210,9 @@ public class MaterialDesignDialog {
     }
 
     public MaterialDesignDialog setCanceledOnTouchOutside(boolean cancel) {
-        this.mCancel = cancel;
+        this.mCancelable = cancel;
         if (mBuilder != null) {
-            mBuilder.setCanceledOnTouchOutside(mCancel);
+            mBuilder.setCanceledOnTouchOutside(mCancelable);
         }
         return this;
     }
@@ -335,7 +336,7 @@ public class MaterialDesignDialog {
             if (mMessageContentView != null) {
                 this.setContentView(mMessageContentView);
             }
-            mAlertDialog.setCanceledOnTouchOutside(mCancel);
+            mAlertDialog.setCanceledOnTouchOutside(mCancelable);
             if (mOnDismissListener != null) {
                 mAlertDialog.setOnDismissListener(mOnDismissListener);
             }
