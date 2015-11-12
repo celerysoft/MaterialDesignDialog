@@ -1,20 +1,16 @@
-# It Takes Two (For Android)
+# Material Design Dialog
 
 [iOS](https://github.com/celerysoft/It-Takes-Two-iOS)
 
 ## What is it?
 
-It Takes Two is a casual game that pick the matched cards and get scores, finally practice your memory.
+Material Design Dialog is an Android dialog widget that accords with the Google Material Design.
 
 ## Features
 
-* 1 minite game
+* Tiny size
 
-* Multi-language: English and Chinese
-
-* Material Design
-
-* Support Android and iOS
+* easy to ues
 
 ## Technical Information
 
@@ -28,13 +24,7 @@ To be added.
 
 ## Screenshots
 
-![01](https://raw.githubusercontent.com/celerysoft/README/master/ItTakesTwo/sc01.png)
-
-![02](https://raw.githubusercontent.com/celerysoft/README/master/ItTakesTwo/sc02.png)
-
-## Acknowledgement
-
-* Stanford CS193p Developing Applications for iOS Fall 2013-14
+To be added.
 
 ## License
 
