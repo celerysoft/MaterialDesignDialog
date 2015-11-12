@@ -1,16 +1,16 @@
 # Material Design Dialog
 
-[iOS](https://github.com/celerysoft/It-Takes-Two-iOS)
-
 ## What is it?
 
-Material Design Dialog is an Android dialog widget that accords with the Google Material Design.
+Material Design Dialog is an Android dialog widget that accords with the Google Material Design. 
+
+Enabling you to use Material Design dialogs down to API 14
 
 ## Features
 
 * Tiny size
 
-* easy to ues
+* Easy to ues
 
 ## Technical Information
 
