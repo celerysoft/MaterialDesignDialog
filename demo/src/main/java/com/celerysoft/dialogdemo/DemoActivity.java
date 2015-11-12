@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.celerysoft.materialdesigndialog.MaterialDesignDialog;
 
@@ -42,8 +43,22 @@ public class DemoActivity extends Activity {
                 mDialog = new MaterialDesignDialog(mContext);
                 mDialog.setTitle("Permissions")
                         .setMessage(message)
-                        .setNegativeButton("DECLINE", null)
-                        .setPositiveButton("ACCEPT", null);
+                        .setNegativeButton("DECLINE", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                mDialog.dismiss();
+                                Toast.makeText(mContext, "click DECLINE", Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .setPositiveButton("ACCEPT", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                mDialog.dismiss();
+                                Toast.makeText(mContext, "show dialog", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(mContext, "click ACCEPT", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                Toast.makeText(mContext, "init dialog", Toast.LENGTH_SHORT).show();
             }
         });
         mBtnShow.setOnClickListener(new View.OnClickListener() {
@@ -52,6 +67,7 @@ public class DemoActivity extends Activity {
                 if (mDialog != null) {
                     mDialog.show();
                 }
+                Toast.makeText(mContext, "show dialog", Toast.LENGTH_SHORT).show();
             }
         });
     }
