@@ -8,7 +8,7 @@ Enabling you to use Material Design dialogs down to API 14
 
 ## Features
 
-* Tiny size
+* Tiny size of lib, it is just a dialog, make it simple.
 
 * Easy to ues
 
@@ -22,9 +22,13 @@ Enabling you to use Material Design dialogs down to API 14
 
 To be added.
 
-## Screenshots
+## Usage
 
 To be added.
+
+## Screenshots
+
+![Screenshot 1](https://raw.githubusercontent.com/celerysoft/README/master/MaterialDesignDialog/sc01.png "Screenshot 1")
 
 ## License
 
