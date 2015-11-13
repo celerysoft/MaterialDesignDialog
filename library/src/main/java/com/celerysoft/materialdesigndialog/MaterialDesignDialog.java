@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
-import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.view.Gravity;
@@ -55,7 +54,7 @@ public class MaterialDesignDialog {
         LIGHT,
         /** dark theme **/
         DARK
-    };
+    }
     /** dialog style **/
     private Style mStyle;
     public enum Style {
@@ -89,6 +88,7 @@ public class MaterialDesignDialog {
         mTheme = theme;
     }
 
+    @SuppressWarnings("unused")
     public void show() {
         if (!mIsShowed) {
             mBuilder = new Builder();
@@ -98,6 +98,21 @@ public class MaterialDesignDialog {
         mIsShowed = true;
     }
 
+    @SuppressWarnings("unused")
+    public void hide() {
+        if (mDialog != null && mIsShowed) {
+            mDialog.hide();
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public void dismiss() {
+        if (mDialog != null && mIsShowed) {
+            mDialog.dismiss();
+        }
+    }
+
+    @SuppressWarnings("unused")
     public MaterialDesignDialog setView(View view) {
         mView = view;
         if (mBuilder != null) {
@@ -106,6 +121,7 @@ public class MaterialDesignDialog {
         return this;
     }
 
+    @SuppressWarnings("unused")
     public MaterialDesignDialog setContentView(View view) {
         mMessageContentView = view;
         if (mBuilder != null) {
@@ -114,6 +130,7 @@ public class MaterialDesignDialog {
         return this;
     }
 
+    @SuppressWarnings("unused")
     public MaterialDesignDialog setBackground(Drawable drawable) {
         mBackgroundDrawable = drawable;
         mBackgroundResId = 0;
@@ -124,6 +141,7 @@ public class MaterialDesignDialog {
         return this;
     }
 
+    @SuppressWarnings("unused")
     public MaterialDesignDialog setBackgroundResource(int resId) {
         mBackgroundResId = resId;
         mBackgroundDrawable = null;
@@ -134,6 +152,7 @@ public class MaterialDesignDialog {
         return this;
     }
 
+    @SuppressWarnings("unused")
     public MaterialDesignDialog setBackgroundColor(int color) {
         if (mBuilder != null) {
             mBuilder.setBackgroundColor(mBackgroundResId);
@@ -144,13 +163,7 @@ public class MaterialDesignDialog {
         return this;
     }
 
-
-    public void dismiss() {
-        mDialog.dismiss();
-    }
-
-
-
+    @SuppressWarnings("unused")
     public MaterialDesignDialog setTitle(int resId) {
         mTitle = mContext.getString(resId);
         if (mBuilder != null) {
@@ -159,6 +172,7 @@ public class MaterialDesignDialog {
         return this;
     }
 
+    @SuppressWarnings("unused")
     public MaterialDesignDialog setTitle(CharSequence title) {
         mTitle = title;
         if (mBuilder != null) {
@@ -167,6 +181,7 @@ public class MaterialDesignDialog {
         return this;
     }
 
+    @SuppressWarnings("unused")
     public MaterialDesignDialog setMessage(int resId) {
         mMessage = mContext.getString(resId);
         if (mBuilder != null) {
@@ -175,6 +190,7 @@ public class MaterialDesignDialog {
         return this;
     }
 
+    @SuppressWarnings("unused")
     public MaterialDesignDialog setMessage(CharSequence message) {
         mMessage = message;
         if (mBuilder != null) {
@@ -183,6 +199,7 @@ public class MaterialDesignDialog {
         return this;
     }
 
+    @SuppressWarnings("unused")
     public MaterialDesignDialog setPositiveButton(int resId, final View.OnClickListener listener) {
         mPositiveButtonText = mContext.getString(resId);
         mPositiveButtonOnClickListener = listener;
@@ -192,7 +209,7 @@ public class MaterialDesignDialog {
         return this;
     }
 
-
+    @SuppressWarnings("unused")
     public MaterialDesignDialog setPositiveButton(String text, final View.OnClickListener listener) {
         mPositiveButtonText = text;
         mPositiveButtonOnClickListener = listener;
@@ -202,6 +219,7 @@ public class MaterialDesignDialog {
         return this;
     }
 
+    @SuppressWarnings("unused")
     public MaterialDesignDialog setNegativeButton(int resId, final View.OnClickListener listener) {
         mNegativeButtonText = mContext.getString(resId);
         mNegativeButtonOnClickListener = listener;
@@ -211,6 +229,7 @@ public class MaterialDesignDialog {
         return this;
     }
 
+    @SuppressWarnings("unused")
     public MaterialDesignDialog setNegativeButton(String text, final View.OnClickListener listener) {
         mNegativeButtonText = text;
         mNegativeButtonOnClickListener = listener;
@@ -220,6 +239,7 @@ public class MaterialDesignDialog {
         return this;
     }
 
+    @SuppressWarnings("unused")
     public MaterialDesignDialog setCanceledOnTouchOutside(boolean cancel) {
         this.mCancelable = cancel;
         if (mBuilder != null) {
@@ -228,6 +248,7 @@ public class MaterialDesignDialog {
         return this;
     }
 
+    @SuppressWarnings("unused")
     public MaterialDesignDialog setOnDismissListener(DialogInterface.OnDismissListener onDismissListener) {
         this.mOnDismissListener = onDismissListener;
         return this;
@@ -264,7 +285,6 @@ public class MaterialDesignDialog {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
     }
 
-
     private class Builder {
 
         private TextView mTitleView;
@@ -287,6 +307,8 @@ public class MaterialDesignDialog {
                 contentView = LayoutInflater.from(mContext).inflate(R.layout.dialog, null);
             } else if (mStyle == Style.SCROLLABLE) {
                 contentView = LayoutInflater.from(mContext).inflate(R.layout.dialog, null);
+            } else if (mStyle == Style.NO_BUTTONS) {
+                contentView = LayoutInflater.from(mContext).inflate(R.layout.dialog, null);
             } else {
                 contentView = LayoutInflater.from(mContext).inflate(R.layout.dialog, null);
             }
@@ -294,39 +316,44 @@ public class MaterialDesignDialog {
             contentView.setFocusableInTouchMode(true);
 
             mAlertDialogWindow.setBackgroundDrawableResource(R.drawable.material_dialog_window);
-
             mAlertDialogWindow.setContentView(contentView);
 
-            WindowManager.LayoutParams params = new WindowManager.LayoutParams(
-                    WindowManager.LayoutParams.WRAP_CONTENT,
-                    WindowManager.LayoutParams.WRAP_CONTENT,
-                    WindowManager.LayoutParams.TYPE_PHONE,
-                    WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM,
-                    PixelFormat.TRANSLUCENT
-            );
-
+//            WindowManager.LayoutParams params = new WindowManager.LayoutParams(
+//                    WindowManager.LayoutParams.WRAP_CONTENT,
+//                    WindowManager.LayoutParams.WRAP_CONTENT,
+//                    WindowManager.LayoutParams.TYPE_PHONE,
+//                    WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM,
+//                    PixelFormat.TRANSLUCENT
+//            );
+            // define view
             mTitleView = (TextView) mAlertDialogWindow.findViewById(R.id.title);
             mMessageView = (TextView) mAlertDialogWindow.findViewById(R.id.dialog_tv_message);
             mButtonLayout = (LinearLayout) mAlertDialogWindow.findViewById(R.id.dialog_button_layout);
+            // set up dialog
             if (mView != null) {
                 LinearLayout linearLayout = (LinearLayout) mAlertDialogWindow.findViewById(R.id.dialog_view);
                 linearLayout.removeAllViews();
                 linearLayout.addView(mView);
             }
+            // set up title
             if (mTitle != null) {
                 setTitle(mTitle);
             } else {
                 mTitleView.setVisibility(View.GONE);
             }
+            // set up message
             if (mMessage != null) {
                 setMessage(mMessage);
             }
+            // set up positive button
             if (mPositiveButtonText != null) {
                 Builder.this.setPositiveButton(mPositiveButtonText, mPositiveButtonOnClickListener);
             }
+            // set up negative button
             if (mNegativeButtonText != null) {
                 Builder.this.setNegativeButton(mNegativeButtonText, mNegativeButtonOnClickListener);
             }
+            // set up background
             if (mBackgroundDrawable != null) {
                 Builder.this.setBackground(mBackgroundDrawable);
             } else if(mBackgroundResId != 0) {
@@ -335,20 +362,26 @@ public class MaterialDesignDialog {
                 Builder.this.setBackgroundColor(mBackgroundColor);
             } else {
                 Drawable defaultBackground;
+                int defaultBackgroundResId;
                 if (mTheme == Theme.LIGHT) {
-                    defaultBackground = mContext.getResources()
-                            .getDrawable(R.drawable.material_dialog_background_light_theme);
+                    defaultBackgroundResId = R.drawable.material_dialog_background_light_theme;
                 } else {
-                    defaultBackground = mContext.getResources()
-                            .getDrawable(R.drawable.material_dialog_background_dark_theme);
+                    defaultBackgroundResId = R.drawable.material_dialog_background_dark_theme;
+                }
+                try {
+                    defaultBackground = mContext.getResources().getDrawable(defaultBackgroundResId, null);
+                } catch (NoSuchMethodError e) {
+                    defaultBackground = mContext.getResources().getDrawable(defaultBackgroundResId);
                 }
                 Builder.this.setBackground(defaultBackground);
             }
-
+            // set up contentView
             if (mMessageContentView != null) {
                 this.setContentView(mMessageContentView);
             }
+            // set up CanceledOnTouchOutsid
             mDialog.setCanceledOnTouchOutside(mCancelable);
+            // set up OnDismissListener
             if (mOnDismissListener != null) {
                 mDialog.setOnDismissListener(mOnDismissListener);
             }
@@ -372,7 +405,7 @@ public class MaterialDesignDialog {
             }
         }
 
-       /**
+        /**
          * set positive button
          * @param text text fo button
          * @param listener OnclickListener of button
@@ -394,7 +427,13 @@ public class MaterialDesignDialog {
             mPositiveButton.setBackgroundResource(backgroundResId);
             mPositiveButton.setText(text);
             mPositiveButton.setTextSize(14);
-            mPositiveButton.setTextColor(mContext.getResources().getColor(R.color.dialog_button));
+            int textColor;
+            try {
+                textColor = mContext.getResources().getColor(R.color.dialog_button, null);
+            } catch (NoSuchMethodError e) {
+                textColor = mContext.getResources().getColor(R.color.dialog_button);
+            }
+            mPositiveButton.setTextColor(textColor);
             mPositiveButton.setGravity(Gravity.CENTER);
             mPositiveButton.setOnClickListener(listener);
             if (isLollipop()) {
@@ -402,8 +441,6 @@ public class MaterialDesignDialog {
             }
             mButtonLayout.addView(mPositiveButton);
         }
-
-
 
         /**
          * set negative button
@@ -428,7 +465,13 @@ public class MaterialDesignDialog {
             mNegativeButton.setLayoutParams(params);
             mNegativeButton.setText(text);
             mNegativeButton.setTextSize(14);
-            mNegativeButton.setTextColor(mContext.getResources().getColor(R.color.dialog_button));
+            int textColor;
+            try {
+                textColor = mContext.getResources().getColor(R.color.dialog_button, null);
+            } catch (NoSuchMethodError e) {
+                textColor = mContext.getResources().getColor(R.color.dialog_button);
+            }
+            mNegativeButton.setTextColor(textColor);
             mNegativeButton.setGravity(Gravity.CENTER);
             mNegativeButton.setOnClickListener(listener);
             if (isLollipop()) {
