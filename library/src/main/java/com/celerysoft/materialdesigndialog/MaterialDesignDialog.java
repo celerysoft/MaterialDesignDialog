@@ -48,8 +48,43 @@ public class MaterialDesignDialog {
     private int mBackgroundColor;
     private DialogInterface.OnDismissListener mOnDismissListener;
 
+    /** dialog theme **/
+    private Theme mTheme;
+    public enum Theme {
+        /** light theme **/
+        LIGHT,
+        /** dark theme **/
+        DARK
+    };
+    /** dialog style **/
+    private Style mStyle;
+    public enum Style {
+        /** normal style **/
+        NORMAL,
+        /** buttons in different row **/
+        STACKED_FULL_WIDTH_BUTTONS,
+        /** only 2 buttons, and in the same row **/
+        SIDE_BY_SIDE_BUTTONS,
+        /** scrollable, use this style when dialog contain a listview **/
+        SCROLLABLE
+    }
+
     public MaterialDesignDialog(Context context) {
-        this.mContext = context;
+        this(context, Style.NORMAL, Theme.LIGHT);
+    }
+
+    public MaterialDesignDialog(Context context, Style style) {
+        this(context, style, Theme.LIGHT);
+    }
+
+    public MaterialDesignDialog(Context context, Theme theme) {
+        this(context, Style.NORMAL, theme);
+    }
+
+    public MaterialDesignDialog(Context context, Style style, Theme theme) {
+        mContext = context;
+        mStyle = style;
+        mTheme = theme;
     }
 
     public void show() {
@@ -230,9 +265,9 @@ public class MaterialDesignDialog {
 
     private class Builder {
 
-        private TextView     mTitleView;
-        private TextView     mMessageView;
-        private Window       mAlertDialogWindow;
+        private TextView mTitleView;
+        private TextView mMessageView;
+        private Window mAlertDialogWindow;
         private LinearLayout mButtonLayout;
 
         private Builder() {
@@ -243,13 +278,22 @@ public class MaterialDesignDialog {
             mDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_MASK_ADJUST);
 
             mAlertDialogWindow = mDialog.getWindow();
-            View contv = LayoutInflater.from(mContext).inflate(R.layout.dialog, null);
-            contv.setFocusable(true);
-            contv.setFocusableInTouchMode(true);
+            View contentView;
+            if (mStyle == Style.STACKED_FULL_WIDTH_BUTTONS) {
+                contentView = LayoutInflater.from(mContext).inflate(R.layout.dialog, null);
+            } else if (mStyle == Style.SIDE_BY_SIDE_BUTTONS) {
+                contentView = LayoutInflater.from(mContext).inflate(R.layout.dialog, null);
+            } else if (mStyle == Style.SCROLLABLE) {
+                contentView = LayoutInflater.from(mContext).inflate(R.layout.dialog, null);
+            } else {
+                contentView = LayoutInflater.from(mContext).inflate(R.layout.dialog, null);
+            }
+            contentView.setFocusable(true);
+            contentView.setFocusableInTouchMode(true);
 
             mAlertDialogWindow.setBackgroundDrawableResource(R.drawable.material_dialog_window);
 
-            mAlertDialogWindow.setContentView(contv);
+            mAlertDialogWindow.setContentView(contentView);
 
             WindowManager.LayoutParams params = new WindowManager.LayoutParams(
                     WindowManager.LayoutParams.WRAP_CONTENT,
@@ -287,6 +331,16 @@ public class MaterialDesignDialog {
                 Builder.this.setBackgroundResource(mBackgroundResId);
             } else if (mBackgroundColor != 0) {
                 Builder.this.setBackgroundColor(mBackgroundColor);
+            } else {
+                Drawable defaultBackground;
+                if (mTheme == Theme.LIGHT) {
+                    defaultBackground = mContext.getResources()
+                            .getDrawable(R.drawable.material_dialog_background_light_theme);
+                } else {
+                    defaultBackground = mContext.getResources()
+                            .getDrawable(R.drawable.material_dialog_background_dark_theme);
+                }
+                Builder.this.setBackground(defaultBackground);
             }
 
             if (mMessageContentView != null) {
@@ -300,10 +354,20 @@ public class MaterialDesignDialog {
 
         public void setTitle(CharSequence title) {
             mTitleView.setText(title);
+            if (mTheme == Theme.LIGHT) {
+                mTitleView.setTextColor(Color.argb(0xDE, 0x00, 0x00, 0x00));
+            } else if (mTheme == Theme.DARK) {
+                mTitleView.setTextColor(Color.argb(0xDE, 0xff, 0xff, 0xff));
+            }
         }
 
         public void setMessage(CharSequence message) {
             mMessageView.setText(message);
+            if (mTheme == Theme.LIGHT) {
+                mMessageView.setTextColor(Color.argb(0x8A, 0x00, 0x00, 0x00));
+            } else if (mTheme == Theme.DARK) {
+                mMessageView.setTextColor(Color.argb(0x8A, 0xff, 0xff, 0xff));
+            }
         }
 
        /**
@@ -317,11 +381,17 @@ public class MaterialDesignDialog {
                     dip2px(88),
                     dip2px(36));
             mPositiveButton.setLayoutParams(params);
-            mPositiveButton.setBackgroundResource(R.drawable.material_dialog_button);
-            mPositiveButton.setTextColor(Color.argb(255, 35, 159, 242));
+            int backgroundResId;
+            if (mTheme == Theme.LIGHT) {
+                backgroundResId = R.drawable.material_dialog_button_light_theme;
+            } else {
+                backgroundResId = R.drawable.material_dialog_button_dark_theme;
+            }
+            mPositiveButton.setBackgroundResource(backgroundResId);
             mPositiveButton.setText(text);
-            mPositiveButton.setGravity(Gravity.CENTER);
             mPositiveButton.setTextSize(14);
+            mPositiveButton.setTextColor(mContext.getResources().getColor(R.color.dialog_button_positive));
+            mPositiveButton.setGravity(Gravity.CENTER);
             mPositiveButton.setOnClickListener(listener);
             if (isLollipop()) {
                 mPositiveButton.setBackgroundResource(android.R.color.transparent);
@@ -343,10 +413,19 @@ public class MaterialDesignDialog {
                     dip2px(36)
             );
             mNegativeButton.setLayoutParams(params);
-            mNegativeButton.setBackgroundResource(R.drawable.material_dialog_button);
             mNegativeButton.setText(text);
-            mNegativeButton.setTextColor(Color.argb(222, 0, 0, 0));
             mNegativeButton.setTextSize(14);
+            int textColor;
+            int backgroundResId;
+            if (mTheme == Theme.LIGHT) {
+                textColor = mContext.getResources().getColor(R.color.dialog_button_light_theme);
+                backgroundResId = R.drawable.material_dialog_button_light_theme;
+            } else {
+                textColor = mContext.getResources().getColor(R.color.dialog_button_dark_theme);
+                backgroundResId = R.drawable.material_dialog_button_dark_theme;
+            }
+            mNegativeButton.setTextColor(textColor);
+            mNegativeButton.setBackgroundResource(backgroundResId);
             mNegativeButton.setGravity(Gravity.CENTER);
             mNegativeButton.setOnClickListener(listener);
             if (isLollipop()) {
@@ -436,7 +515,7 @@ public class MaterialDesignDialog {
         }
 
         public void setBackground(Drawable drawable) {
-            LinearLayout linearLayout = (LinearLayout) mAlertDialogWindow.findViewById(R.id.material_background);
+            LinearLayout linearLayout = (LinearLayout) mAlertDialogWindow.findViewById(R.id.dialog_background);
             try {
                 linearLayout.setBackground(drawable);
             } catch (NoSuchMethodError e) {
@@ -445,12 +524,12 @@ public class MaterialDesignDialog {
         }
 
         public void setBackgroundResource(int resId) {
-            LinearLayout linearLayout = (LinearLayout) mAlertDialogWindow.findViewById(R.id.material_background);
+            LinearLayout linearLayout = (LinearLayout) mAlertDialogWindow.findViewById(R.id.dialog_background);
             linearLayout.setBackgroundResource(resId);
         }
 
         public void setBackgroundColor(int color) {
-            LinearLayout linearLayout = (LinearLayout) mAlertDialogWindow.findViewById(R.id.material_background);
+            LinearLayout linearLayout = (LinearLayout) mAlertDialogWindow.findViewById(R.id.dialog_background);
             linearLayout.setBackgroundColor(color);
         }
 
