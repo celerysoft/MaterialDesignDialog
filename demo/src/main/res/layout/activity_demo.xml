@@ -15,14 +15,29 @@
             android:id="@+id/demo_btn_init"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="24dp"
             android:text="init"/>
 
         <Button
             android:id="@+id/demo_btn_show"
             android:layout_width="match_parent"
             android:layout_height="48dp"
+            android:layout_marginBottom="8dp"
             android:text="show"/>
+
+        <Button
+            android:id="@+id/demo_btn_show_notitle"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginBottom="8dp"
+            android:text="show no title"/>
+
+        <Button
+            android:id="@+id/demo_btn_change_background"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginBottom="8dp"
+            android:text="change background"/>
 
     </LinearLayout>
 
