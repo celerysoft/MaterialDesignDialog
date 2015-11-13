@@ -66,7 +66,9 @@ public class MaterialDesignDialog {
         /** only 2 buttons, and in the same row **/
         SIDE_BY_SIDE_BUTTONS,
         /** scrollable, use this style when dialog contain a listview **/
-        SCROLLABLE
+        SCROLLABLE,
+        /** without buttons on the bottom of dialog **/
+        NO_BUTTONS
     }
 
     public MaterialDesignDialog(Context context) {
@@ -304,10 +306,10 @@ public class MaterialDesignDialog {
             );
 
             mTitleView = (TextView) mAlertDialogWindow.findViewById(R.id.title);
-            mMessageView = (TextView) mAlertDialogWindow.findViewById(R.id.message);
-            mButtonLayout = (LinearLayout) mAlertDialogWindow.findViewById(R.id.buttonLayout);
+            mMessageView = (TextView) mAlertDialogWindow.findViewById(R.id.dialog_tv_message);
+            mButtonLayout = (LinearLayout) mAlertDialogWindow.findViewById(R.id.dialog_button_layout);
             if (mView != null) {
-                LinearLayout linearLayout = (LinearLayout) mAlertDialogWindow.findViewById(R.id.contentView);
+                LinearLayout linearLayout = (LinearLayout) mAlertDialogWindow.findViewById(R.id.dialog_view);
                 linearLayout.removeAllViews();
                 linearLayout.addView(mView);
             }
@@ -378,9 +380,11 @@ public class MaterialDesignDialog {
         public void setPositiveButton(CharSequence text, final View.OnClickListener listener) {
             mPositiveButton = new Button(mContext);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                    dip2px(88),
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
                     dip2px(36));
             mPositiveButton.setLayoutParams(params);
+            mPositiveButton.setPadding(dip2px(8), 0, dip2px(8), 0);
+            mPositiveButton.setMinWidth(dip2px(64));
             int backgroundResId;
             if (mTheme == Theme.LIGHT) {
                 backgroundResId = R.drawable.material_dialog_button_light_theme;
@@ -390,7 +394,7 @@ public class MaterialDesignDialog {
             mPositiveButton.setBackgroundResource(backgroundResId);
             mPositiveButton.setText(text);
             mPositiveButton.setTextSize(14);
-            mPositiveButton.setTextColor(mContext.getResources().getColor(R.color.dialog_button_positive));
+            mPositiveButton.setTextColor(mContext.getResources().getColor(R.color.dialog_button));
             mPositiveButton.setGravity(Gravity.CENTER);
             mPositiveButton.setOnClickListener(listener);
             if (isLollipop()) {
@@ -409,29 +413,32 @@ public class MaterialDesignDialog {
         public void setNegativeButton(CharSequence text, final View.OnClickListener listener) {
             mNegativeButton = new Button(mContext);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                    dip2px(88),
-                    dip2px(36)
-            );
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    dip2px(36));
+            mNegativeButton.setLayoutParams(params);
+            mNegativeButton.setPadding(dip2px(8), 0, dip2px(8), 0);
+            mNegativeButton.setMinWidth(dip2px(64));
+            int backgroundResId;
+            if (mTheme == Theme.LIGHT) {
+                backgroundResId = R.drawable.material_dialog_button_light_theme;
+            } else {
+                backgroundResId = R.drawable.material_dialog_button_dark_theme;
+            }
+            mNegativeButton.setBackgroundResource(backgroundResId);
             mNegativeButton.setLayoutParams(params);
             mNegativeButton.setText(text);
             mNegativeButton.setTextSize(14);
-            int textColor;
-            int backgroundResId;
-            if (mTheme == Theme.LIGHT) {
-                textColor = mContext.getResources().getColor(R.color.dialog_button_light_theme);
-                backgroundResId = R.drawable.material_dialog_button_light_theme;
-            } else {
-                textColor = mContext.getResources().getColor(R.color.dialog_button_dark_theme);
-                backgroundResId = R.drawable.material_dialog_button_dark_theme;
-            }
-            mNegativeButton.setTextColor(textColor);
-            mNegativeButton.setBackgroundResource(backgroundResId);
+            mNegativeButton.setTextColor(mContext.getResources().getColor(R.color.dialog_button));
             mNegativeButton.setGravity(Gravity.CENTER);
             mNegativeButton.setOnClickListener(listener);
             if (isLollipop()) {
                 mNegativeButton.setBackgroundResource(android.R.color.transparent);
             }
             if (mButtonLayout.getChildCount() > 0) {
+                params.setMargins(0, 0, dip2px(8), 0);
+                mNegativeButton.setLayoutParams(params);
+                mNegativeButton.setPadding(dip2px(8), 0, dip2px(8), 0);
+                mNegativeButton.setMinWidth(dip2px(64));
                 mButtonLayout.addView(mNegativeButton, 1);
             } else {
                 mButtonLayout.addView(mNegativeButton);
@@ -439,7 +446,7 @@ public class MaterialDesignDialog {
         }
 
         public void setView(View view) {
-            LinearLayout l = (LinearLayout) mAlertDialogWindow.findViewById(R.id.contentView);
+            LinearLayout l = (LinearLayout) mAlertDialogWindow.findViewById(R.id.dialog_view);
             l.removeAllViews();
             ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             view.setLayoutParams(layoutParams);
@@ -498,7 +505,7 @@ public class MaterialDesignDialog {
             if (contentView instanceof ListView) {
                 setListViewHeightBasedOnChildren((ListView) contentView);
             }
-            LinearLayout linearLayout = (LinearLayout) mAlertDialogWindow.findViewById(R.id.message_content_view);
+            LinearLayout linearLayout = (LinearLayout) mAlertDialogWindow.findViewById(R.id.dialog_content_view);
             if (linearLayout != null) {
                 linearLayout.removeAllViews();
                 linearLayout.addView(contentView);

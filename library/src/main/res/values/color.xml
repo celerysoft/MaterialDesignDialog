@@ -10,9 +10,7 @@
     <color name="dialog_title_dark_theme">#DEFFFFFF</color>
     <color name="dialog_message_light_theme">#8A000000</color>
     <color name="dialog_message_dark_theme">#8AFFFFFF</color>
-    <color name="dialog_button_light_theme">#DE000000</color>
-    <color name="dialog_button_dark_theme">#DEFFFFFF</color>
-    <color name="dialog_button_positive">#DE1E88E5</color>
+    <color name="dialog_button">#DE1E88E5</color>
     <color name="dialog_button_pressed">#FFF0F0F0</color>
 
 </resources>

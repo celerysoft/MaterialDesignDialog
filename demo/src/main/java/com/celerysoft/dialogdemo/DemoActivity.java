@@ -11,9 +11,11 @@ import android.widget.Toast;
 import com.celerysoft.materialdesigndialog.MaterialDesignDialog;
 
 public class DemoActivity extends Activity {
+    // field
     private MaterialDesignDialog mDialog;
     private Context mContext;
 
+    // declare view
     private Button mBtnShow;
     private Button mBtnShowNotitle;
     private Button mBtnChangeBackground;
