@@ -30,6 +30,10 @@ To be added.
 
 ![Screenshot 1](https://raw.githubusercontent.com/celerysoft/README/master/MaterialDesignDialog/sc01.png "Screenshot 1")
 
+![Screenshot 2](https://raw.githubusercontent.com/celerysoft/README/master/MaterialDesignDialog/sc02.png "Screenshot 2")
+
+![Screenshot 3](https://raw.githubusercontent.com/celerysoft/README/master/MaterialDesignDialog/sc03.png "Screenshot 3")
+
 ## License
 
 [MIT](./LICENSE)
