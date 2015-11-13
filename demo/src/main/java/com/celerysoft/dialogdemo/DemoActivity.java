@@ -14,10 +14,10 @@ public class DemoActivity extends Activity {
     private MaterialDesignDialog mDialog;
     private Context mContext;
 
-    private Button mBtnInit;
     private Button mBtnShow;
     private Button mBtnShowNotitle;
     private Button mBtnChangeBackground;
+    private Button mBtnDarkTheme;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,19 +32,13 @@ public class DemoActivity extends Activity {
     }
 
     private void defineView() {
-        mBtnInit = (Button) findViewById(R.id.demo_btn_init);
         mBtnShow = (Button) findViewById(R.id.demo_btn_show);
         mBtnShowNotitle = (Button) findViewById(R.id.demo_btn_show_notitle);
         mBtnChangeBackground = (Button) findViewById(R.id.demo_btn_change_background);
+        mBtnDarkTheme = (Button) findViewById(R.id.demo_btn_dark_theme);
     }
 
     private void defineListener() {
-        mBtnInit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBtnInitClick();
-            }
-        });
         mBtnShow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -63,53 +57,20 @@ public class DemoActivity extends Activity {
                 onBtnChangeBackgroundClick();
             }
         });
-    }
-
-    private void onBtnInitClick() {
-        initDialog();
+        mBtnDarkTheme.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBtnDarkThemeClick();
+            }
+        });
     }
 
     private void onBtnShowClick() {
-        if (mDialog != null) {
-            mDialog.show();
-        }
-        Toast.makeText(mContext, "show dialog", Toast.LENGTH_SHORT).show();
-    }
-
-    private void onBtnShowNotitleclick() {
-        final MaterialDesignDialog dialog = new MaterialDesignDialog(this);
-        dialog.setMessage("This is a dialog without title. Sometime you need a dialog without title, this is.")
-                .setPositiveButton(android.R.string.yes, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.dismiss();
-                    }
-                });
-        dialog.show();
-    }
-
-    private void onBtnChangeBackgroundClick() {
-        final MaterialDesignDialog dialog = new MaterialDesignDialog(mContext);
-        int r = (int) (Math.random() * 0xff);
-        int g = (int) (Math.random() * 0xff);
-        int b = (int) (Math.random() * 0xff);
-        dialog.setBackgroundColor(Color.rgb(r, g, b));
-        dialog.setCanceledOnTouchOutside(true);
-        dialog.setMessage("This is a dialog that changes background color. Google does not recommend you change the background of dialog, I just offer this method for fun, do not use it :D")
-                .setPositiveButton(android.R.string.yes, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.dismiss();
-                    }
-                });
-        dialog.show();
-        Toast.makeText(getApplicationContext(), "Try to change background again", Toast.LENGTH_SHORT).show();
-    }
-
-    private void initDialog() {
-        String message = "This app determines your phone's location and shares" +
-                " it with Google in order to serve personalized alerts to you." +
-                " This allows for a better overall app experience.";
+        String message = "This dialog use material-design to design it."
+                + " Use it if you really like it,"
+                + " make it better if you feel it suck."
+                + "\nThis dialog has 2 themes and"
+                + " 4 styles, hope you can like it.";
         mDialog = new MaterialDesignDialog(mContext);
         mDialog.setTitle("Permissions")
                 .setMessage(message)
@@ -124,10 +85,72 @@ public class DemoActivity extends Activity {
                     @Override
                     public void onClick(View v) {
                         mDialog.dismiss();
-                        Toast.makeText(mContext, "show dialog", Toast.LENGTH_SHORT).show();
                         Toast.makeText(mContext, "click ACCEPT", Toast.LENGTH_SHORT).show();
                     }
                 });
-        Toast.makeText(mContext, "init dialog", Toast.LENGTH_SHORT).show();
+        mDialog.show();
+        Toast.makeText(mContext, "show dialog", Toast.LENGTH_SHORT).show();
+    }
+
+    private void onBtnShowNotitleclick() {
+        String message = "This is a dialog without title."
+                + " Sometime you need a dialog without title, this is.";
+        final MaterialDesignDialog dialog = new MaterialDesignDialog(this);
+        dialog.setMessage(message)
+                .setPositiveButton(android.R.string.yes, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+        dialog.show();
+    }
+
+    private void onBtnChangeBackgroundClick() {
+        String message = "This is a dialog that changes background color."
+                + " Google does not recommend you change the background of dialog,"
+                + " I just offer this method for fun, do not use it :D"
+                + "\n\nTry to change background again.";
+        int r = (int) (Math.random() * 0xff);
+        int g = (int) (Math.random() * 0xff);
+        int b = (int) (Math.random() * 0xff);
+        final MaterialDesignDialog dialog = new MaterialDesignDialog(mContext);
+        dialog.setBackgroundColor(Color.rgb(r, g, b))
+                .setTitle("Colorful background")
+                .setMessage(message)
+                .setPositiveButton(android.R.string.yes, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                })
+                .setCanceledOnTouchOutside(true);
+        dialog.show();
+    }
+
+    private void onBtnDarkThemeClick() {
+        String message = "It is a dark theme dialog. Sometimes you need a dark theme dialog to"
+                + " fit your own theme, it is."
+                + "\nWe offer only 2 themes:"
+                + "\nMaterialDesignDialog.Theme.Light"
+                + "\nand"
+                + "\nMaterialDesignDialog.Theme.Dark";
+        final MaterialDesignDialog dialog = new MaterialDesignDialog(this, MaterialDesignDialog.Theme.DARK);
+        dialog.setTitle("Dark theme dialog")
+                .setMessage(message)
+                .setCanceledOnTouchOutside(true)
+                .setPositiveButton("OK", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton("KO", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+        dialog.show();
     }
 }
