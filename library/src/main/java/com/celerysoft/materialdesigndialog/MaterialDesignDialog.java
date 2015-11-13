@@ -30,20 +30,22 @@ import android.widget.TextView;
 public class MaterialDesignDialog {
     private Context mContext;
     private boolean mCancelable;
-    private Dialog mAlertDialog;
+    private boolean mIsShowed = false;
+    private Dialog mDialog;
     private MaterialDesignDialog.Builder mBuilder;
     private View mView;
-    private int mTitleResId;
+    private View mMessageContentView;
     private CharSequence mTitle;
-    private int mMessageResId;
     private CharSequence mMessage;
     private Button mPositiveButton;
-    private LinearLayout.LayoutParams mLayoutParams;
+    private CharSequence mPositiveButtonText;
+    private View.OnClickListener mPositiveButtonOnClickListener;
     private Button mNegativeButton;
-    private boolean mHasShow = false;
+    private CharSequence mNegativeButtonText;
+    private View.OnClickListener mNegativeButtonOnClickListener;
     private Drawable mBackgroundDrawable;
     private int mBackgroundResId;
-    private View mMessageContentView;
+    private int mBackgroundColor;
     private DialogInterface.OnDismissListener mOnDismissListener;
 
     public MaterialDesignDialog(Context context) {
@@ -51,12 +53,12 @@ public class MaterialDesignDialog {
     }
 
     public void show() {
-        if (!mHasShow) {
+        if (!mIsShowed) {
             mBuilder = new Builder();
         } else {
-            mAlertDialog.show();
+            mDialog.show();
         }
-        mHasShow = true;
+        mIsShowed = true;
     }
 
     public MaterialDesignDialog setView(View view) {
@@ -77,6 +79,8 @@ public class MaterialDesignDialog {
 
     public MaterialDesignDialog setBackground(Drawable drawable) {
         mBackgroundDrawable = drawable;
+        mBackgroundResId = 0;
+        mBackgroundColor = 0;
         if (mBuilder != null) {
             mBuilder.setBackground(mBackgroundDrawable);
         }
@@ -85,23 +89,35 @@ public class MaterialDesignDialog {
 
     public MaterialDesignDialog setBackgroundResource(int resId) {
         mBackgroundResId = resId;
+        mBackgroundDrawable = null;
+        mBackgroundColor = 0;
         if (mBuilder != null) {
             mBuilder.setBackgroundResource(mBackgroundResId);
         }
         return this;
     }
 
+    public MaterialDesignDialog setBackgroundColor(int color) {
+        if (mBuilder != null) {
+            mBuilder.setBackgroundColor(mBackgroundResId);
+        }
+        mBackgroundColor = color;
+        mBackgroundDrawable = null;
+        mBackgroundResId = 0;
+        return this;
+    }
+
 
     public void dismiss() {
-        mAlertDialog.dismiss();
+        mDialog.dismiss();
     }
 
 
 
     public MaterialDesignDialog setTitle(int resId) {
-        mTitleResId = resId;
+        mTitle = mContext.getString(resId);
         if (mBuilder != null) {
-            mBuilder.setTitle(resId);
+            mBuilder.setTitle(mTitle);
         }
         return this;
     }
@@ -115,9 +131,9 @@ public class MaterialDesignDialog {
     }
 
     public MaterialDesignDialog setMessage(int resId) {
-        mMessageResId = resId;
+        mMessage = mContext.getString(resId);
         if (mBuilder != null) {
-            mBuilder.setMessage(resId);
+            mBuilder.setMessage(mMessage);
         }
         return this;
     }
@@ -131,81 +147,39 @@ public class MaterialDesignDialog {
     }
 
     public MaterialDesignDialog setPositiveButton(int resId, final View.OnClickListener listener) {
-        mPositiveButton = new Button(mContext);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                dip2px(88),
-                dip2px(36)
-        );
-        mPositiveButton.setLayoutParams(params);
-        mPositiveButton.setBackgroundResource(R.drawable.material_dialog_button);
-        mPositiveButton.setTextColor(Color.argb(255, 35, 159, 242));
-        mPositiveButton.setText(resId);
-        mPositiveButton.setGravity(Gravity.CENTER);
-        mPositiveButton.setTextSize(14);
-        mPositiveButton.setOnClickListener(listener);
-        if (isLollipop()) {
-            mPositiveButton.setBackgroundResource(android.R.color.transparent);
+        mPositiveButtonText = mContext.getString(resId);
+        mPositiveButtonOnClickListener = listener;
+        if (mBuilder != null) {
+            mBuilder.setPositiveButton(mPositiveButtonText, listener);
         }
         return this;
     }
 
 
     public MaterialDesignDialog setPositiveButton(String text, final View.OnClickListener listener) {
-        mPositiveButton = new Button(mContext);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                dip2px(88),
-                dip2px(36)
-        );
-        mPositiveButton.setLayoutParams(params);
-        mPositiveButton.setBackgroundResource(R.drawable.material_dialog_button);
-        mPositiveButton.setTextColor(Color.argb(255, 35, 159, 242));
-        mPositiveButton.setText(text);
-        mPositiveButton.setGravity(Gravity.CENTER);
-        mPositiveButton.setTextSize(14);
-        mPositiveButton.setOnClickListener(listener);
-        if (isLollipop()) {
-            mPositiveButton.setBackgroundResource(android.R.color.transparent);
+        mPositiveButtonText = text;
+        mPositiveButtonOnClickListener = listener;
+        if (mBuilder != null) {
+            mBuilder.setPositiveButton(text, listener);
         }
         return this;
     }
 
     public MaterialDesignDialog setNegativeButton(int resId, final View.OnClickListener listener) {
-        mNegativeButton = new Button(mContext);
-        mLayoutParams = new LinearLayout.LayoutParams(
-                dip2px(88),
-                dip2px(36)
-        );
-        mNegativeButton.setLayoutParams(mLayoutParams);
-        mNegativeButton.setBackgroundResource(R.drawable.material_dialog_button);
-        mNegativeButton.setText(resId);
-        mNegativeButton.setTextColor(Color.argb(222, 0, 0, 0));
-        mNegativeButton.setTextSize(14);
-        mNegativeButton.setGravity(Gravity.CENTER);
-        mNegativeButton.setOnClickListener(listener);
-        if (isLollipop()) {
-            mNegativeButton.setBackgroundResource(android.R.color.transparent);
+        mNegativeButtonText = mContext.getString(resId);
+        mNegativeButtonOnClickListener = listener;
+        if (mBuilder != null) {
+            mBuilder.setNegativeButton(mNegativeButtonText, listener);
         }
-
         return this;
     }
 
     public MaterialDesignDialog setNegativeButton(String text, final View.OnClickListener listener) {
-        mNegativeButton = new Button(mContext);
-        mLayoutParams = new LinearLayout.LayoutParams(
-                dip2px(88),
-                dip2px(36)
-        );
-        mNegativeButton.setLayoutParams(mLayoutParams);
-        mNegativeButton.setBackgroundResource(R.drawable.material_dialog_button);
-        mNegativeButton.setText(text);
-        mNegativeButton.setTextColor(Color.argb(222, 0, 0, 0));
-        mNegativeButton.setTextSize(14);
-        mNegativeButton.setGravity(Gravity.CENTER);
-        mNegativeButton.setOnClickListener(listener);
-        if (isLollipop()) {
-            mNegativeButton.setBackgroundResource(android.R.color.transparent);
+        mNegativeButtonText = text;
+        mNegativeButtonOnClickListener = listener;
+        if (mBuilder != null) {
+            mBuilder.setNegativeButton(text, listener);
         }
-
         return this;
     }
 
@@ -223,13 +197,12 @@ public class MaterialDesignDialog {
     }
 
     /**
-     * 动态测量listview-Item的高度
-     * @param listView
+     * caculate the height of listview dynamically
+     * @param listView that need to caculate
      */
     public static void setListViewHeightBasedOnChildren(ListView listView) {
         ListAdapter listAdapter = listView.getAdapter();
         if (listAdapter == null) {
-            // pre-condition
             return;
         }
 
@@ -263,13 +236,13 @@ public class MaterialDesignDialog {
         private LinearLayout mButtonLayout;
 
         private Builder() {
-            mAlertDialog = new AlertDialog.Builder(mContext).create();
-            mAlertDialog.show();
+            mDialog = new AlertDialog.Builder(mContext).create();
+            mDialog.show();
 
-            mAlertDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
-            mAlertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_MASK_ADJUST);
+            mDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+            mDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_MASK_ADJUST);
 
-            mAlertDialogWindow = mAlertDialog.getWindow();
+            mAlertDialogWindow = mDialog.getWindow();
             View contv = LayoutInflater.from(mContext).inflate(R.layout.dialog, null);
             contv.setFocusable(true);
             contv.setFocusableInTouchMode(true);
@@ -294,109 +267,95 @@ public class MaterialDesignDialog {
                 linearLayout.removeAllViews();
                 linearLayout.addView(mView);
             }
-            if (mTitleResId != 0) {
-                setTitle(mTitleResId);
-            }
             if (mTitle != null) {
                 setTitle(mTitle);
-            }
-            if (mTitle == null && mTitleResId == 0) {
+            } else {
                 mTitleView.setVisibility(View.GONE);
-            }
-            if (mMessageResId != 0) {
-                setMessage(mMessageResId);
             }
             if (mMessage != null) {
                 setMessage(mMessage);
             }
-            if (mPositiveButton != null) {
-                mButtonLayout.addView(mPositiveButton);
+            if (mPositiveButtonText != null) {
+                Builder.this.setPositiveButton(mPositiveButtonText, mPositiveButtonOnClickListener);
             }
-            if (mLayoutParams != null && mNegativeButton != null) {
-                if (mButtonLayout.getChildCount() > 0) {
-                    mButtonLayout.addView(mNegativeButton, 1);
-                } else {
-                    mButtonLayout.addView(mNegativeButton);
-                }
-            }
-            if (mBackgroundResId != 0) {
-                LinearLayout linearLayout = (LinearLayout) mAlertDialogWindow.findViewById(R.id.material_background);
-                linearLayout.setBackgroundResource(mBackgroundResId);
+            if (mNegativeButtonText != null) {
+                Builder.this.setNegativeButton(mNegativeButtonText, mNegativeButtonOnClickListener);
             }
             if (mBackgroundDrawable != null) {
-                LinearLayout linearLayout = (LinearLayout) mAlertDialogWindow.findViewById(R.id.material_background);
-                try {
-                    linearLayout.setBackground(mBackgroundDrawable);
-                } catch (NoSuchMethodError e) {
-                    linearLayout.setBackgroundDrawable(mBackgroundDrawable);
-                }
-
+                Builder.this.setBackground(mBackgroundDrawable);
+            } else if(mBackgroundResId != 0) {
+                Builder.this.setBackgroundResource(mBackgroundResId);
+            } else if (mBackgroundColor != 0) {
+                Builder.this.setBackgroundColor(mBackgroundColor);
             }
 
             if (mMessageContentView != null) {
                 this.setContentView(mMessageContentView);
             }
-            mAlertDialog.setCanceledOnTouchOutside(mCancelable);
+            mDialog.setCanceledOnTouchOutside(mCancelable);
             if (mOnDismissListener != null) {
-                mAlertDialog.setOnDismissListener(mOnDismissListener);
+                mDialog.setOnDismissListener(mOnDismissListener);
             }
-        }
-
-        public void setTitle(int resId) {
-            mTitleView.setText(resId);
         }
 
         public void setTitle(CharSequence title) {
             mTitleView.setText(title);
         }
 
-        public void setMessage(int resId) {
-            mMessageView.setText(resId);
-        }
-
         public void setMessage(CharSequence message) {
             mMessageView.setText(message);
         }
 
-        /**
-         * 设置确定按钮
-         * @param text 按钮名字
-         * @param listener 监听器
+       /**
+         * set positive button
+         * @param text text fo button
+         * @param listener OnclickListener of button
          */
-        public void setPositiveButton(String text, final View.OnClickListener listener) {
-            Button button = new Button(mContext);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(dip2px(88), dip2px(36));
-            button.setLayoutParams(params);
-            button.setBackgroundResource(R.drawable.material_dialog_button);
-            button.setTextColor(Color.argb(255, 35, 159, 242));
-            button.setText(text);
-            button.setGravity(Gravity.CENTER);
-            button.setTextSize(14);
-            button.setOnClickListener(listener);
-            mButtonLayout.addView(button);
+        public void setPositiveButton(CharSequence text, final View.OnClickListener listener) {
+            mPositiveButton = new Button(mContext);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    dip2px(88),
+                    dip2px(36));
+            mPositiveButton.setLayoutParams(params);
+            mPositiveButton.setBackgroundResource(R.drawable.material_dialog_button);
+            mPositiveButton.setTextColor(Color.argb(255, 35, 159, 242));
+            mPositiveButton.setText(text);
+            mPositiveButton.setGravity(Gravity.CENTER);
+            mPositiveButton.setTextSize(14);
+            mPositiveButton.setOnClickListener(listener);
+            if (isLollipop()) {
+                mPositiveButton.setBackgroundResource(android.R.color.transparent);
+            }
+            mButtonLayout.addView(mPositiveButton);
         }
 
+
+
         /**
-         * 设置取消按钮
-         * @param text 按钮文字
-         * @param listener 监听器
+         * set negative button
+         * @param text text of button
+         * @param listener OnClickListener of button
          */
-        public void setNegativeButton(String text, final View.OnClickListener listener) {
-            Button button = new Button(mContext);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(dip2px(88), dip2px(36));
-            button.setLayoutParams(params);
-            button.setBackgroundResource(R.drawable.material_dialog_button);
-            button.setText(text);
-            button.setTextColor(Color.argb(222, 0, 0, 0));
-            button.setTextSize(14);
-            button.setGravity(Gravity.CENTER);
-            button.setOnClickListener(listener);
+        public void setNegativeButton(CharSequence text, final View.OnClickListener listener) {
+            mNegativeButton = new Button(mContext);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    dip2px(88),
+                    dip2px(36)
+            );
+            mNegativeButton.setLayoutParams(params);
+            mNegativeButton.setBackgroundResource(R.drawable.material_dialog_button);
+            mNegativeButton.setText(text);
+            mNegativeButton.setTextColor(Color.argb(222, 0, 0, 0));
+            mNegativeButton.setTextSize(14);
+            mNegativeButton.setGravity(Gravity.CENTER);
+            mNegativeButton.setOnClickListener(listener);
+            if (isLollipop()) {
+                mNegativeButton.setBackgroundResource(android.R.color.transparent);
+            }
             if (mButtonLayout.getChildCount() > 0) {
-                button.setLayoutParams(params);
-                mButtonLayout.addView(button, 1);
+                mButtonLayout.addView(mNegativeButton, 1);
             } else {
-                button.setLayoutParams(params);
-                mButtonLayout.addView(button);
+                mButtonLayout.addView(mNegativeButton);
             }
         }
 
@@ -490,9 +449,13 @@ public class MaterialDesignDialog {
             linearLayout.setBackgroundResource(resId);
         }
 
+        public void setBackgroundColor(int color) {
+            LinearLayout linearLayout = (LinearLayout) mAlertDialogWindow.findViewById(R.id.material_background);
+            linearLayout.setBackgroundColor(color);
+        }
 
         public void setCanceledOnTouchOutside(boolean canceledOnTouchOutside) {
-            mAlertDialog.setCanceledOnTouchOutside(canceledOnTouchOutside);
+            mDialog.setCanceledOnTouchOutside(canceledOnTouchOutside);
         }
     }
 }
