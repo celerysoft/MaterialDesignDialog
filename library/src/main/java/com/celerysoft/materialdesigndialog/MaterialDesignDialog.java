@@ -325,15 +325,15 @@ public class MaterialDesignDialog {
             mAlertDialogWindow = mDialog.getWindow();
             View contentView;
             if (mStyle == Style.STACKED_FULL_WIDTH_BUTTONS) {
-                contentView = LayoutInflater.from(mContext).inflate(R.layout.dialog, null);
+                contentView = LayoutInflater.from(mContext).inflate(R.layout.material_design_dialog, null);
             } else if (mStyle == Style.SIDE_BY_SIDE_BUTTONS) {
-                contentView = LayoutInflater.from(mContext).inflate(R.layout.dialog, null);
+                contentView = LayoutInflater.from(mContext).inflate(R.layout.material_design_dialog, null);
             } else if (mStyle == Style.SCROLLABLE) {
-                contentView = LayoutInflater.from(mContext).inflate(R.layout.dialog, null);
+                contentView = LayoutInflater.from(mContext).inflate(R.layout.material_design_dialog, null);
             } else if (mStyle == Style.NO_BUTTONS) {
-                contentView = LayoutInflater.from(mContext).inflate(R.layout.dialog, null);
+                contentView = LayoutInflater.from(mContext).inflate(R.layout.material_design_dialog, null);
             } else {
-                contentView = LayoutInflater.from(mContext).inflate(R.layout.dialog, null);
+                contentView = LayoutInflater.from(mContext).inflate(R.layout.material_design_dialog, null);
             }
             contentView.setFocusable(true);
             contentView.setFocusableInTouchMode(true);
@@ -349,7 +349,7 @@ public class MaterialDesignDialog {
 //                    PixelFormat.TRANSLUCENT
 //            );
             // define view
-            mTitleView = (TextView) mAlertDialogWindow.findViewById(R.id.title);
+            mTitleView = (TextView) mAlertDialogWindow.findViewById(R.id.dialog_tv_title);
             mMessageView = (TextView) mAlertDialogWindow.findViewById(R.id.dialog_tv_message);
             mButtonLayout = (LinearLayout) mAlertDialogWindow.findViewById(R.id.dialog_button_layout);
             // set up dialog
