@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -18,6 +19,7 @@ public class DemoActivity extends Activity {
     // declare view
     private Button mBtnShow;
     private Button mBtnShowNotitle;
+    private Button mBtnSetItems;
     private Button mBtnChangeBackground;
     private Button mBtnDarkTheme;
 
@@ -36,6 +38,7 @@ public class DemoActivity extends Activity {
     private void defineView() {
         mBtnShow = (Button) findViewById(R.id.demo_btn_show);
         mBtnShowNotitle = (Button) findViewById(R.id.demo_btn_show_notitle);
+        mBtnSetItems = (Button) findViewById(R.id.demo_btn_set_items);
         mBtnChangeBackground = (Button) findViewById(R.id.demo_btn_change_background);
         mBtnDarkTheme = (Button) findViewById(R.id.demo_btn_dark_theme);
     }
@@ -51,6 +54,12 @@ public class DemoActivity extends Activity {
             @Override
             public void onClick(View v) {
                 onBtnShowNotitleclick();
+            }
+        });
+        mBtnSetItems.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBtnSetItems();
             }
         });
         mBtnChangeBackground.setOnClickListener(new View.OnClickListener() {
@@ -102,6 +111,36 @@ public class DemoActivity extends Activity {
                 .setPositiveButton(android.R.string.yes, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+        dialog.show();
+    }
+
+    private void onBtnSetItems() {
+        String one = "1. single line";
+        String two = "2. multi linns here, i don't know what to say, let us see what will be happened.";
+        String three = "3. lol";
+        String[] items = new String[]{one, two, three};
+
+        final MaterialDesignDialog dialog = new MaterialDesignDialog(this);
+        dialog.setTitle("1, 2, 3, what your choice")
+                .setItems(items, new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        switch (position /** or switch id, they are the same **/) {
+                            case 0:
+                                Toast.makeText(mContext, "You choose 1", Toast.LENGTH_SHORT).show();
+                                break;
+                            case 1:
+                                Toast.makeText(mContext, "You choose 2", Toast.LENGTH_SHORT).show();
+                                break;
+                            case 2:
+                                Toast.makeText(mContext, "You choose 3", Toast.LENGTH_SHORT).show();
+                                break;
+                            default:
+                                break;
+                        }
                         dialog.dismiss();
                     }
                 });
