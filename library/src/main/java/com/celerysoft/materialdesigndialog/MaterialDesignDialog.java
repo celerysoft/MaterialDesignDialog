@@ -14,6 +14,8 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -36,12 +38,14 @@ public class MaterialDesignDialog {
     private View mMessageContentView;
     private CharSequence mTitle;
     private CharSequence mMessage;
-    private Button mPositiveButton;
+    //private Button mPositiveButton;
     private CharSequence mPositiveButtonText;
     private View.OnClickListener mPositiveButtonOnClickListener;
-    private Button mNegativeButton;
+    //private Button mNegativeButton;
     private CharSequence mNegativeButtonText;
     private View.OnClickListener mNegativeButtonOnClickListener;
+    private String[] mItems;
+    private AdapterView.OnItemClickListener mItemsOnClickListener;
     private Drawable mBackgroundDrawable;
     private int mBackgroundResId;
     private int mBackgroundColor;
@@ -240,6 +244,16 @@ public class MaterialDesignDialog {
     }
 
     @SuppressWarnings("unused")
+    public MaterialDesignDialog setItems(String[] items, AdapterView.OnItemClickListener listener) {
+        mItems = items;
+        mItemsOnClickListener = listener;
+        if (mBuilder != null) {
+            mBuilder.setItems(items, listener);
+        }
+        return this;
+    }
+
+    @SuppressWarnings("unused")
     public MaterialDesignDialog setCanceledOnTouchOutside(boolean cancel) {
         this.mCancelable = cancel;
         if (mBuilder != null) {
@@ -258,7 +272,7 @@ public class MaterialDesignDialog {
      * caculate the height of listview dynamically
      * @param listView that need to caculate
      */
-    public static void setListViewHeightBasedOnChildren(ListView listView) {
+    public void autoAdjustContentListView(ListView listView) {
         ListAdapter listAdapter = listView.getAdapter();
         if (listAdapter == null) {
             return;
@@ -267,12 +281,21 @@ public class MaterialDesignDialog {
         int totalHeight = 0;
         for (int i = 0; i < listAdapter.getCount(); i++) {
             View listItem = listAdapter.getView(i, null, listView);
-            listItem.measure(0, 0);
+            listItem.measure(ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT);
+            if (listItem instanceof TextView) {
+                if (mTheme == Theme.LIGHT) {
+                    ((TextView) listItem).setTextColor(Color.argb(0xDE, 0x00, 0x00, 0x00));
+                } else if (mTheme == Theme.DARK) {
+                    ((TextView) listItem).setTextColor(Color.argb(0xDE, 0xff, 0xff, 0xff));
+                }
+            }
             totalHeight += listItem.getMeasuredHeight();
         }
 
         ViewGroup.LayoutParams params = listView.getLayoutParams();
-        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        int fix = dip2px(26);// SrollView contain ListView, must fix the height
+        params.height = fix + totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
         listView.setLayoutParams(params);
     }
 
@@ -353,6 +376,13 @@ public class MaterialDesignDialog {
             if (mNegativeButtonText != null) {
                 Builder.this.setNegativeButton(mNegativeButtonText, mNegativeButtonOnClickListener);
             }
+            if (mPositiveButtonText == null && mNegativeButtonText == null) {
+                mButtonLayout.setVisibility(View.GONE);
+            }
+            // set up items
+            if (mItems != null) {
+                Builder.this.setItems(mItems, mItemsOnClickListener);
+            }
             // set up background
             if (mBackgroundDrawable != null) {
                 Builder.this.setBackground(mBackgroundDrawable);
@@ -411,35 +441,35 @@ public class MaterialDesignDialog {
          * @param listener OnclickListener of button
          */
         public void setPositiveButton(CharSequence text, final View.OnClickListener listener) {
-            mPositiveButton = new Button(mContext);
+            Button positiveButton = new Button(mContext);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT,
                     dip2px(36));
-            mPositiveButton.setLayoutParams(params);
-            mPositiveButton.setPadding(dip2px(8), 0, dip2px(8), 0);
-            mPositiveButton.setMinWidth(dip2px(64));
+            positiveButton.setLayoutParams(params);
+            positiveButton.setPadding(dip2px(8), 0, dip2px(8), 0);
+            positiveButton.setMinWidth(dip2px(64));
             int backgroundResId;
             if (mTheme == Theme.LIGHT) {
                 backgroundResId = R.drawable.material_dialog_button_light_theme;
             } else {
                 backgroundResId = R.drawable.material_dialog_button_dark_theme;
             }
-            mPositiveButton.setBackgroundResource(backgroundResId);
-            mPositiveButton.setText(text);
-            mPositiveButton.setTextSize(14);
+            positiveButton.setBackgroundResource(backgroundResId);
+            positiveButton.setText(text);
+            positiveButton.setTextSize(14);
             int textColor;
             try {
                 textColor = mContext.getResources().getColor(R.color.dialog_button, null);
             } catch (NoSuchMethodError e) {
                 textColor = mContext.getResources().getColor(R.color.dialog_button);
             }
-            mPositiveButton.setTextColor(textColor);
-            mPositiveButton.setGravity(Gravity.CENTER);
-            mPositiveButton.setOnClickListener(listener);
+            positiveButton.setTextColor(textColor);
+            positiveButton.setGravity(Gravity.CENTER);
+            positiveButton.setOnClickListener(listener);
             if (isLollipop()) {
-                mPositiveButton.setBackgroundResource(android.R.color.transparent);
+                positiveButton.setBackgroundResource(android.R.color.transparent);
             }
-            mButtonLayout.addView(mPositiveButton);
+            mButtonLayout.addView(positiveButton);
         }
 
         /**
@@ -448,44 +478,61 @@ public class MaterialDesignDialog {
          * @param listener OnClickListener of button
          */
         public void setNegativeButton(CharSequence text, final View.OnClickListener listener) {
-            mNegativeButton = new Button(mContext);
+            Button negativeButton = new Button(mContext);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT,
                     dip2px(36));
-            mNegativeButton.setLayoutParams(params);
-            mNegativeButton.setPadding(dip2px(8), 0, dip2px(8), 0);
-            mNegativeButton.setMinWidth(dip2px(64));
+            negativeButton.setLayoutParams(params);
+            negativeButton.setPadding(dip2px(8), 0, dip2px(8), 0);
+            negativeButton.setMinWidth(dip2px(64));
             int backgroundResId;
             if (mTheme == Theme.LIGHT) {
                 backgroundResId = R.drawable.material_dialog_button_light_theme;
             } else {
                 backgroundResId = R.drawable.material_dialog_button_dark_theme;
             }
-            mNegativeButton.setBackgroundResource(backgroundResId);
-            mNegativeButton.setLayoutParams(params);
-            mNegativeButton.setText(text);
-            mNegativeButton.setTextSize(14);
+            negativeButton.setBackgroundResource(backgroundResId);
+            negativeButton.setLayoutParams(params);
+            negativeButton.setText(text);
+            negativeButton.setTextSize(14);
             int textColor;
             try {
                 textColor = mContext.getResources().getColor(R.color.dialog_button, null);
             } catch (NoSuchMethodError e) {
                 textColor = mContext.getResources().getColor(R.color.dialog_button);
             }
-            mNegativeButton.setTextColor(textColor);
-            mNegativeButton.setGravity(Gravity.CENTER);
-            mNegativeButton.setOnClickListener(listener);
+            negativeButton.setTextColor(textColor);
+            negativeButton.setGravity(Gravity.CENTER);
+            negativeButton.setOnClickListener(listener);
             if (isLollipop()) {
-                mNegativeButton.setBackgroundResource(android.R.color.transparent);
+                negativeButton.setBackgroundResource(android.R.color.transparent);
             }
             if (mButtonLayout.getChildCount() > 0) {
                 params.setMargins(0, 0, dip2px(8), 0);
-                mNegativeButton.setLayoutParams(params);
-                mNegativeButton.setPadding(dip2px(8), 0, dip2px(8), 0);
-                mNegativeButton.setMinWidth(dip2px(64));
-                mButtonLayout.addView(mNegativeButton, 1);
+                negativeButton.setLayoutParams(params);
+                negativeButton.setPadding(dip2px(8), 0, dip2px(8), 0);
+                negativeButton.setMinWidth(dip2px(64));
+                mButtonLayout.addView(negativeButton, 1);
             } else {
-                mButtonLayout.addView(mNegativeButton);
+                mButtonLayout.addView(negativeButton);
             }
+        }
+
+        public void setItems(String[] items, AdapterView.OnItemClickListener listener) {
+            final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
+                    mContext, R.layout.simple_list_item);
+            arrayAdapter.addAll(items);
+
+            ListView listView = new ListView(mContext);
+            listView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            float scale = mContext.getResources().getDisplayMetrics().density;
+            int dpAsPixels = (int) (8 * scale + 0.5f);
+            //listView.setPadding(0, dpAsPixels, 0, dpAsPixels);
+            listView.setDividerHeight(0);
+            listView.setAdapter(arrayAdapter);
+            listView.setOnItemClickListener(listener);
+
+            setContentView(listView);
         }
 
         public void setView(View view) {
@@ -546,7 +593,7 @@ public class MaterialDesignDialog {
             ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             contentView.setLayoutParams(layoutParams);
             if (contentView instanceof ListView) {
-                setListViewHeightBasedOnChildren((ListView) contentView);
+                autoAdjustContentListView((ListView) contentView);
             }
             LinearLayout linearLayout = (LinearLayout) mAlertDialogWindow.findViewById(R.id.dialog_content_view);
             if (linearLayout != null) {
