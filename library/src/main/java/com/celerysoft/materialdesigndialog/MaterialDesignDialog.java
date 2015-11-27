@@ -22,6 +22,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 /**
@@ -272,7 +273,7 @@ public class MaterialDesignDialog {
      * caculate the height of listview dynamically
      * @param listView that need to caculate
      */
-    public void autoAdjustContentListView(ListView listView) {
+    public void autoAdjustContentListView(ListView listView, int fixHeight) {
         ListAdapter listAdapter = listView.getAdapter();
         if (listAdapter == null) {
             return;
@@ -295,7 +296,7 @@ public class MaterialDesignDialog {
 
         ViewGroup.LayoutParams params = listView.getLayoutParams();
         int fix = dip2px(26);// SrollView contain ListView, must fix the height
-        params.height = fix + totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        params.height = fixHeight + totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
         listView.setLayoutParams(params);
     }
 
@@ -529,6 +530,7 @@ public class MaterialDesignDialog {
             int dpAsPixels = (int) (8 * scale + 0.5f);
             //listView.setPadding(0, dpAsPixels, 0, dpAsPixels);
             listView.setDividerHeight(0);
+            listView.setBackgroundColor(Color.argb(222, 50, 0, 0));
             listView.setAdapter(arrayAdapter);
             listView.setOnItemClickListener(listener);
 
@@ -592,17 +594,28 @@ public class MaterialDesignDialog {
         public void setContentView(View contentView) {
             ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             contentView.setLayoutParams(layoutParams);
+            LinearLayout contentViewParent;
             if (contentView instanceof ListView) {
-                autoAdjustContentListView((ListView) contentView);
+                //autoAdjustContentListView((ListView) contentView, 15);
+                contentViewParent = (LinearLayout) mAlertDialogWindow.findViewById(R.id.dialog_main_content_view);
+            } else {
+                contentViewParent = (LinearLayout) mAlertDialogWindow.findViewById(R.id.dialog_content_view);
             }
-            LinearLayout linearLayout = (LinearLayout) mAlertDialogWindow.findViewById(R.id.dialog_content_view);
-            if (linearLayout != null) {
-                linearLayout.removeAllViews();
-                linearLayout.addView(contentView);
 
-                for (int i = 0; i < linearLayout.getChildCount(); i++) {
-                    if (linearLayout.getChildAt(i) instanceof AutoCompleteTextView) {
-                        AutoCompleteTextView autoCompleteTextView = (AutoCompleteTextView) linearLayout.getChildAt(i);
+            if (contentViewParent != null) {
+                contentViewParent.removeAllViews();
+                contentViewParent.addView(contentView);
+
+//                ScrollView v =  (ScrollView) mAlertDialogWindow.findViewById(R.id.dialog_scroll_view);
+//                boolean isFullScroll = v.fullScroll(ScrollView.FOCUS_DOWN);
+//                int scroll = v.getScrollY();
+//                int scrollAmount = v.getMaxScrollAmount();
+//                boolean isFillViewport = v.isFillViewport();
+//                String s = "";
+
+                for (int i = 0; i < contentViewParent.getChildCount(); i++) {
+                    if (contentViewParent.getChildAt(i) instanceof AutoCompleteTextView) {
+                        AutoCompleteTextView autoCompleteTextView = (AutoCompleteTextView) contentViewParent.getChildAt(i);
                         autoCompleteTextView.setFocusable(true);
                         autoCompleteTextView.requestFocus();
                         autoCompleteTextView.setFocusableInTouchMode(true);
