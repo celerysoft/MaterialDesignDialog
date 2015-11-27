@@ -28,6 +28,8 @@ To be added.
 
 ## Screenshots
 
+![Screenshot 0](https://raw.githubusercontent.com/celerysoft/README/master/MaterialDesignDialog/sc01.gif "Screenshot 0")
+
 ![Screenshot 1](https://raw.githubusercontent.com/celerysoft/README/master/MaterialDesignDialog/sc01.png "Screenshot 1")
 
 ![Screenshot 2](https://raw.githubusercontent.com/celerysoft/README/master/MaterialDesignDialog/sc02.png "Screenshot 2")
