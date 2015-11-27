@@ -22,7 +22,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 /**
@@ -272,8 +271,12 @@ public class MaterialDesignDialog {
     /**
      * caculate the height of listview dynamically
      * @param listView that need to caculate
+     * @deprecated ScrollView contains ListView is not a good idea,
+     * but i will leave the code here, it shows how to handle a ScrollView containing a ListView
+     * if the height of ScrollView is tiny tiny.
      */
-    public void autoAdjustContentListView(ListView listView, int fixHeight) {
+    @Deprecated
+    public void autoAdjustContentListView(ListView listView) {
         ListAdapter listAdapter = listView.getAdapter();
         if (listAdapter == null) {
             return;
@@ -296,7 +299,7 @@ public class MaterialDesignDialog {
 
         ViewGroup.LayoutParams params = listView.getLayoutParams();
         int fix = dip2px(26);// SrollView contain ListView, must fix the height
-        params.height = fixHeight + totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        params.height = fix + totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
         listView.setLayoutParams(params);
     }
 
@@ -355,9 +358,9 @@ public class MaterialDesignDialog {
             mButtonLayout = (LinearLayout) mAlertDialogWindow.findViewById(R.id.dialog_button_layout);
             // set up dialog
             if (mView != null) {
-                LinearLayout linearLayout = (LinearLayout) mAlertDialogWindow.findViewById(R.id.dialog_view);
-                linearLayout.removeAllViews();
-                linearLayout.addView(mView);
+                ViewGroup viewParent = (ViewGroup) mAlertDialogWindow.findViewById(R.id.dialog_view);
+                viewParent.removeAllViews();
+                viewParent.addView(mView);
             }
             // set up title
             if (mTitle != null) {
@@ -526,11 +529,7 @@ public class MaterialDesignDialog {
 
             ListView listView = new ListView(mContext);
             listView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-            float scale = mContext.getResources().getDisplayMetrics().density;
-            int dpAsPixels = (int) (8 * scale + 0.5f);
-            //listView.setPadding(0, dpAsPixels, 0, dpAsPixels);
             listView.setDividerHeight(0);
-            listView.setBackgroundColor(Color.argb(222, 50, 0, 0));
             listView.setAdapter(arrayAdapter);
             listView.setOnItemClickListener(listener);
 
@@ -538,8 +537,8 @@ public class MaterialDesignDialog {
         }
 
         public void setView(View view) {
-            LinearLayout l = (LinearLayout) mAlertDialogWindow.findViewById(R.id.dialog_view);
-            l.removeAllViews();
+            ViewGroup parentView = (ViewGroup) mAlertDialogWindow.findViewById(R.id.dialog_view);
+            parentView.removeAllViews();
             ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             view.setLayoutParams(layoutParams);
 
@@ -566,7 +565,7 @@ public class MaterialDesignDialog {
                     }
             );
 
-            l.addView(view);
+            parentView.addView(view);
 
             if (view instanceof ViewGroup) {
 
@@ -594,24 +593,19 @@ public class MaterialDesignDialog {
         public void setContentView(View contentView) {
             ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             contentView.setLayoutParams(layoutParams);
-            LinearLayout contentViewParent;
+
+            ViewGroup contentViewParent;
+
             if (contentView instanceof ListView) {
-                //autoAdjustContentListView((ListView) contentView, 15);
-                contentViewParent = (LinearLayout) mAlertDialogWindow.findViewById(R.id.dialog_main_content_view);
+                //autoAdjustContentListView((ListView) contentView);
+                contentViewParent = (ViewGroup) mAlertDialogWindow.findViewById(R.id.dialog_main_content_view);
             } else {
-                contentViewParent = (LinearLayout) mAlertDialogWindow.findViewById(R.id.dialog_content_view);
+                contentViewParent = (ViewGroup) mAlertDialogWindow.findViewById(R.id.dialog_content_view);
             }
 
             if (contentViewParent != null) {
                 contentViewParent.removeAllViews();
                 contentViewParent.addView(contentView);
-
-//                ScrollView v =  (ScrollView) mAlertDialogWindow.findViewById(R.id.dialog_scroll_view);
-//                boolean isFullScroll = v.fullScroll(ScrollView.FOCUS_DOWN);
-//                int scroll = v.getScrollY();
-//                int scrollAmount = v.getMaxScrollAmount();
-//                boolean isFillViewport = v.isFillViewport();
-//                String s = "";
 
                 for (int i = 0; i < contentViewParent.getChildCount(); i++) {
                     if (contentViewParent.getChildAt(i) instanceof AutoCompleteTextView) {
@@ -625,22 +619,22 @@ public class MaterialDesignDialog {
         }
 
         public void setBackground(Drawable drawable) {
-            LinearLayout linearLayout = (LinearLayout) mAlertDialogWindow.findViewById(R.id.dialog_background);
+            ViewGroup backgroundView = (ViewGroup) mAlertDialogWindow.findViewById(R.id.dialog_background);
             try {
-                linearLayout.setBackground(drawable);
+                backgroundView.setBackground(drawable);
             } catch (NoSuchMethodError e) {
-                linearLayout.setBackgroundDrawable(drawable);
+                backgroundView.setBackgroundDrawable(drawable);
             }
         }
 
         public void setBackgroundResource(int resId) {
-            LinearLayout linearLayout = (LinearLayout) mAlertDialogWindow.findViewById(R.id.dialog_background);
-            linearLayout.setBackgroundResource(resId);
+            ViewGroup backgroundView = (ViewGroup) mAlertDialogWindow.findViewById(R.id.dialog_background);
+            backgroundView.setBackgroundResource(resId);
         }
 
         public void setBackgroundColor(int color) {
-            LinearLayout linearLayout = (LinearLayout) mAlertDialogWindow.findViewById(R.id.dialog_background);
-            linearLayout.setBackgroundColor(color);
+            ViewGroup backgroundView = (ViewGroup) mAlertDialogWindow.findViewById(R.id.dialog_background);
+            backgroundView.setBackgroundColor(color);
         }
 
         public void setCanceledOnTouchOutside(boolean canceledOnTouchOutside) {
