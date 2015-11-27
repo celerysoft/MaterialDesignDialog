@@ -185,12 +185,6 @@ public class DemoActivity extends Activity {
                     public void onClick(View v) {
                         dialog.dismiss();
                     }
-                })
-                .setNegativeButton("KO", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.dismiss();
-                    }
                 });
         dialog.show();
     }

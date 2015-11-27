@@ -323,35 +323,42 @@ public class MaterialDesignDialog {
             mDialog = new AlertDialog.Builder(mContext).create();
             mDialog.show();
 
-            mDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
-            mDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_MASK_ADJUST);
-
             mAlertDialogWindow = mDialog.getWindow();
+
+            mAlertDialogWindow.clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+            mAlertDialogWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_MASK_ADJUST);
+
+            mAlertDialogWindow.setLayout(WindowManager.LayoutParams.WRAP_CONTENT,
+                    WindowManager.LayoutParams.WRAP_CONTENT);
+            WindowManager.LayoutParams a = mAlertDialogWindow.getAttributes();
+            a.width = WindowManager.LayoutParams.WRAP_CONTENT;
+            a.height = WindowManager.LayoutParams.WRAP_CONTENT;
+            mAlertDialogWindow.setAttributes(a);
+
             View contentView;
+            LinearLayout root = new LinearLayout(mContext);
+
             if (mStyle == Style.STACKED_FULL_WIDTH_BUTTONS) {
-                contentView = LayoutInflater.from(mContext).inflate(R.layout.material_design_dialog, null);
+                contentView = LayoutInflater.from(mContext).inflate(R.layout.material_design_dialog, root, false);
             } else if (mStyle == Style.SIDE_BY_SIDE_BUTTONS) {
-                contentView = LayoutInflater.from(mContext).inflate(R.layout.material_design_dialog, null);
+                contentView = LayoutInflater.from(mContext).inflate(R.layout.material_design_dialog, root, false);
             } else if (mStyle == Style.SCROLLABLE) {
-                contentView = LayoutInflater.from(mContext).inflate(R.layout.material_design_dialog, null);
+                contentView = LayoutInflater.from(mContext).inflate(R.layout.material_design_dialog, root, false);
             } else if (mStyle == Style.NO_BUTTONS) {
-                contentView = LayoutInflater.from(mContext).inflate(R.layout.material_design_dialog, null);
+                contentView = LayoutInflater.from(mContext).inflate(R.layout.material_design_dialog, root, false);
             } else {
-                contentView = LayoutInflater.from(mContext).inflate(R.layout.material_design_dialog, null);
+                contentView = LayoutInflater.from(mContext).inflate(R.layout.material_design_dialog, root, false);
             }
+            contentView.setMinimumWidth(dip2px(280));
             contentView.setFocusable(true);
             contentView.setFocusableInTouchMode(true);
 
+
             mAlertDialogWindow.setBackgroundDrawableResource(R.drawable.material_dialog_window);
+
+            //mAlertDialogWindow.setContentView(R.layout.material_design_dialog);
             mAlertDialogWindow.setContentView(contentView);
 
-//            WindowManager.LayoutParams params = new WindowManager.LayoutParams(
-//                    WindowManager.LayoutParams.WRAP_CONTENT,
-//                    WindowManager.LayoutParams.WRAP_CONTENT,
-//                    WindowManager.LayoutParams.TYPE_PHONE,
-//                    WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM,
-//                    PixelFormat.TRANSLUCENT
-//            );
             // define view
             mTitleView = (TextView) mAlertDialogWindow.findViewById(R.id.dialog_tv_title);
             mMessageView = (TextView) mAlertDialogWindow.findViewById(R.id.dialog_tv_message);
