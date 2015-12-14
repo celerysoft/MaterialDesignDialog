@@ -18,6 +18,7 @@ public class DemoActivity extends Activity {
 
     // declare view
     private Button mBtnShow;
+    private Button mBtnShowStacked;
     private Button mBtnShowNotitle;
     private Button mBtnSetItems;
     private Button mBtnChangeBackground;
@@ -37,6 +38,7 @@ public class DemoActivity extends Activity {
 
     private void defineView() {
         mBtnShow = (Button) findViewById(R.id.demo_btn_show);
+        mBtnShowStacked = (Button) findViewById(R.id.demo_btn_show_stacked_full_width_buttons);
         mBtnShowNotitle = (Button) findViewById(R.id.demo_btn_show_notitle);
         mBtnSetItems = (Button) findViewById(R.id.demo_btn_set_items);
         mBtnChangeBackground = (Button) findViewById(R.id.demo_btn_change_background);
@@ -48,6 +50,12 @@ public class DemoActivity extends Activity {
             @Override
             public void onClick(View v) {
                 onBtnShowClick();
+            }
+        });
+        mBtnShowStacked.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBtnShowStackedClick();
             }
         });
         mBtnShowNotitle.setOnClickListener(new View.OnClickListener() {
@@ -81,8 +89,35 @@ public class DemoActivity extends Activity {
                 + " Use it if you really like it,"
                 + " make it better if you feel it suck."
                 + "\nThis dialog has 2 themes and"
-                + " 4 styles, hope you can like it.";
+                + " 2 styles, hope you can like it.";
         mDialog = new MaterialDesignDialog(mContext);
+        mDialog.setTitle("Permissions")
+                .setMessage(message)
+                .setNegativeButton("DECLINE", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mDialog.dismiss();
+                        Toast.makeText(mContext, "click DECLINE", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setPositiveButton("ACCEPT", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mDialog.dismiss();
+                        Toast.makeText(mContext, "click ACCEPT", Toast.LENGTH_SHORT).show();
+                    }
+                });
+        mDialog.show();
+        Toast.makeText(mContext, "show dialog", Toast.LENGTH_SHORT).show();
+    }
+
+    private void onBtnShowStackedClick() {
+        String message = "This dialog use material-design to design it."
+                + " Use it if you really like it,"
+                + " make it better if you feel it suck."
+                + "\nThis dialog has 2 themes and"
+                + " 2 styles, hope you can like it.";
+        mDialog = new MaterialDesignDialog(mContext, MaterialDesignDialog.Style.STACKED_FULL_WIDTH_BUTTONS);
         mDialog.setTitle("Permissions")
                 .setMessage(message)
                 .setNegativeButton("DECLINE", new View.OnClickListener() {

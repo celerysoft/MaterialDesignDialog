@@ -18,6 +18,13 @@
             android:text="show"/>
 
         <Button
+            android:id="@+id/demo_btn_show_stacked_full_width_buttons"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="8dp"
+            android:text="show stacked full width buttons"/>
+
+        <Button
             android:id="@+id/demo_btn_show_notitle"
             android:layout_width="match_parent"
             android:layout_height="48dp"
