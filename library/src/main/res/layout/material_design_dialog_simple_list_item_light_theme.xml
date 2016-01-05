@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+          android:paddingTop="8dp"
+          android:paddingBottom="8dp"
+          android:paddingLeft="24dp"
+          android:paddingStart="24dp"
+          android:paddingRight="24dp"
+          android:paddingEnd="24dp"
+          android:minHeight="48dp"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:textColor="@color/material_design_dialog_message_light_theme"
+          android:textSize="20sp"
+          android:gravity="center_vertical"/>

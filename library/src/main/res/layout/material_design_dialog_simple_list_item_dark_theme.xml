@@ -9,6 +9,6 @@
           android:minHeight="48dp"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:textColor="#8a000000"
+          android:textColor="@color/material_design_dialog_message_dark_theme"
           android:textSize="20sp"
           android:gravity="center_vertical"/>

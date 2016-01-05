@@ -30,7 +30,7 @@ import android.widget.TextView;
  */
 public class MaterialDesignDialog {
     private Context mContext;
-    private boolean mCancelable;
+    private boolean mCancelable = true;
     private boolean mIsShowed = false;
     private Dialog mDialog;
     private MaterialDesignDialog.Builder mBuilder;
@@ -49,13 +49,17 @@ public class MaterialDesignDialog {
     private int mBackgroundColor;
     private DialogInterface.OnDismissListener mOnDismissListener;
 
+    //dialog的背景资源id，titleview的颜色，message的颜色，button的background
+
     /** dialog theme **/
     private Theme mTheme;
     public enum Theme {
         /** light theme **/
         LIGHT,
         /** dark theme **/
-        DARK
+        DARK,
+        /** custom theme **/
+        CUSTOM
     }
     /** dialog style **/
     private Style mStyle;
@@ -152,12 +156,12 @@ public class MaterialDesignDialog {
 
     @SuppressWarnings("unused")
     public MaterialDesignDialog setBackgroundColor(int color) {
-        if (mBuilder != null) {
-            mBuilder.setBackgroundColor(mBackgroundResId);
-        }
         mBackgroundColor = color;
         mBackgroundDrawable = null;
         mBackgroundResId = 0;
+        if (mBuilder != null) {
+            mBuilder.setBackgroundColor(mBackgroundColor);
+        }
         return this;
     }
 
@@ -284,9 +288,9 @@ public class MaterialDesignDialog {
                     ViewGroup.LayoutParams.WRAP_CONTENT);
             if (listItem instanceof TextView) {
                 if (mTheme == Theme.LIGHT) {
-                    ((TextView) listItem).setTextColor(Color.argb(0xDE, 0x00, 0x00, 0x00));
+                    ((TextView) listItem).setTextColor(Color.argb(0x8A, 0x00, 0x00, 0x00));
                 } else if (mTheme == Theme.DARK) {
-                    ((TextView) listItem).setTextColor(Color.argb(0xDE, 0xff, 0xff, 0xff));
+                    ((TextView) listItem).setTextColor(Color.argb(0x8A, 0xff, 0xff, 0xff));
                 }
             }
             totalHeight += listItem.getMeasuredHeight();
@@ -336,18 +340,17 @@ public class MaterialDesignDialog {
             if (mStyle == Style.STACKED_FULL_WIDTH_BUTTONS) {
                 contentView = LayoutInflater.from(mContext).inflate(R.layout.material_design_dialog_stacked_full_width_buttons, root, false);
             } else if (mStyle == Style.SIDE_BY_SIDE_BUTTONS) {
-                contentView = LayoutInflater.from(mContext).inflate(R.layout.material_design_dialog, root, false);
+                contentView = LayoutInflater.from(mContext).inflate(R.layout.material_design_dialog_side_by_side_buttons, root, false);
             } else {
-                contentView = LayoutInflater.from(mContext).inflate(R.layout.material_design_dialog, root, false);
+                contentView = LayoutInflater.from(mContext).inflate(R.layout.material_design_dialog_side_by_side_buttons, root, false);
             }
             contentView.setMinimumWidth(dip2px(280));
             contentView.setFocusable(true);
             contentView.setFocusableInTouchMode(true);
 
 
-            mAlertDialogWindow.setBackgroundDrawableResource(R.drawable.material_dialog_window);
+            mAlertDialogWindow.setBackgroundDrawableResource(R.drawable.material_design_dialog_window);
 
-            //mAlertDialogWindow.setContentView(R.layout.material_design_dialog);
             mAlertDialogWindow.setContentView(contentView);
 
             // define view
@@ -396,9 +399,9 @@ public class MaterialDesignDialog {
                 Drawable defaultBackground;
                 int defaultBackgroundResId;
                 if (mTheme == Theme.LIGHT) {
-                    defaultBackgroundResId = R.drawable.material_dialog_background_light_theme;
+                    defaultBackgroundResId = R.drawable.material_design_dialog_background_light_theme;
                 } else {
-                    defaultBackgroundResId = R.drawable.material_dialog_background_dark_theme;
+                    defaultBackgroundResId = R.drawable.material_design_dialog_background_dark_theme;
                 }
                 try {
                     defaultBackground = mContext.getResources().getDrawable(defaultBackgroundResId, null);
@@ -463,22 +466,22 @@ public class MaterialDesignDialog {
             }
             positiveButton.setLayoutParams(params);
 
-            int backgroundResId;
+            int buttonBackgroundResId;
             if (mTheme == Theme.LIGHT) {
-                backgroundResId = R.drawable.material_dialog_button_light_theme;
+                buttonBackgroundResId = R.drawable.material_design_dialog_button_light_theme;
             } else {
-                backgroundResId = R.drawable.material_dialog_button_dark_theme;
+                buttonBackgroundResId = R.drawable.material_design_dialog_button_dark_theme;
             }
-            positiveButton.setBackgroundResource(backgroundResId);
+            positiveButton.setBackgroundResource(buttonBackgroundResId);
 
             positiveButton.setText(text);
             positiveButton.setTextSize(14);
 
             int textColor;
             try {
-                textColor = mContext.getResources().getColor(R.color.dialog_button, null);
+                textColor = mContext.getResources().getColor(R.color.material_design_dialog_button, null);
             } catch (NoSuchMethodError e) {
-                textColor = mContext.getResources().getColor(R.color.dialog_button);
+                textColor = mContext.getResources().getColor(R.color.material_design_dialog_button);
             }
             positiveButton.setTextColor(textColor);
 
@@ -518,22 +521,22 @@ public class MaterialDesignDialog {
             }
             negativeButton.setLayoutParams(params);
 
-            int backgroundResId;
+            int buttonBackgroundResId;
             if (mTheme == Theme.LIGHT) {
-                backgroundResId = R.drawable.material_dialog_button_light_theme;
+                buttonBackgroundResId = R.drawable.material_design_dialog_button_light_theme;
             } else {
-                backgroundResId = R.drawable.material_dialog_button_dark_theme;
+                buttonBackgroundResId = R.drawable.material_design_dialog_button_dark_theme;
             }
-            negativeButton.setBackgroundResource(backgroundResId);
+            negativeButton.setBackgroundResource(buttonBackgroundResId);
 
             negativeButton.setText(text);
             negativeButton.setTextSize(14);
 
             int textColor;
             try {
-                textColor = mContext.getResources().getColor(R.color.dialog_button, null);
+                textColor = mContext.getResources().getColor(R.color.material_design_dialog_button, null);
             } catch (NoSuchMethodError e) {
-                textColor = mContext.getResources().getColor(R.color.dialog_button);
+                textColor = mContext.getResources().getColor(R.color.material_design_dialog_button);
             }
             negativeButton.setTextColor(textColor);
 
@@ -563,7 +566,7 @@ public class MaterialDesignDialog {
 
         public void setItems(String[] items, AdapterView.OnItemClickListener listener) {
             final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
-                    mContext, R.layout.simple_list_item);
+                    mContext, R.layout.material_design_dialog_simple_list_item_light_theme);
             arrayAdapter.addAll(items);
 
             ListView listView = new ListView(mContext);
