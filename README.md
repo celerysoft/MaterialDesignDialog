@@ -1,5 +1,9 @@
 # Material Design Dialog
 
+**Note**
+
+**Material Design Dialog is Deprecated, please use [AppCompatDialog](http://developer.android.com/reference/android/support/v7/app/AppCompatDialog.html) to instead of**
+
 ## What is it?
 
 Material Design Dialog is an Android dialog widget that accords with the Google Material Design.
@@ -10,7 +14,7 @@ Enabling you to use Material Design dialogs down to API 14
 
 * Tiny size of lib, it is just a dialog, make it simple.
 
-* Easy to ues
+* Easy to use.
 
 ## Technical Information
 
