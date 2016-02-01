@@ -448,24 +448,6 @@ public class MaterialDesignDialog {
         public void setPositiveButton(CharSequence text, final View.OnClickListener listener) {
             Button positiveButton = new Button(mContext);
 
-            LinearLayout.LayoutParams params = null;
-            if (mStyle == Style.SIDE_BY_SIDE_BUTTONS) {
-                params = new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.WRAP_CONTENT,
-                        dip2px(36));
-
-                positiveButton.setPadding(dip2px(8), 0, dip2px(8), 0);
-                positiveButton.setMinWidth(dip2px(64));
-                positiveButton.setGravity(Gravity.CENTER);
-            } else if (mStyle == Style.STACKED_FULL_WIDTH_BUTTONS) {
-                params = new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        dip2px(48));
-                positiveButton.setPadding(dip2px(16), 0, dip2px(16), 0);
-                positiveButton.setGravity(Gravity.CENTER_VERTICAL | Gravity.END);
-            }
-            positiveButton.setLayoutParams(params);
-
             int buttonBackgroundResId;
             if (mTheme == Theme.LIGHT) {
                 buttonBackgroundResId = R.drawable.material_design_dialog_button_light_theme;
@@ -473,6 +455,25 @@ public class MaterialDesignDialog {
                 buttonBackgroundResId = R.drawable.material_design_dialog_button_dark_theme;
             }
             positiveButton.setBackgroundResource(buttonBackgroundResId);
+
+            LinearLayout.LayoutParams params = null;
+            if (mStyle == Style.SIDE_BY_SIDE_BUTTONS) {
+                params = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        dip2px(36));
+                positiveButton.setPadding(dip2px(8), 0, dip2px(8), 0);
+                positiveButton.setMinWidth(dip2px(64));
+                positiveButton.setGravity(Gravity.CENTER);
+            } else if (mStyle == Style.STACKED_FULL_WIDTH_BUTTONS) {
+                params = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        dip2px(48));
+                positiveButton.setGravity(Gravity.CENTER_VERTICAL | Gravity.END);
+                positiveButton.setPadding(dip2px(16), 0, dip2px(16), 0);
+            }
+            if (params != null) {
+                positiveButton.setLayoutParams(params);
+            }
 
             positiveButton.setText(text);
             positiveButton.setTextSize(14);
@@ -502,25 +503,6 @@ public class MaterialDesignDialog {
         public void setNegativeButton(CharSequence text, final View.OnClickListener listener) {
             Button negativeButton = new Button(mContext);
 
-            LinearLayout.LayoutParams params = null;
-            if (mStyle == Style.SIDE_BY_SIDE_BUTTONS) {
-                params = new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.WRAP_CONTENT,
-                        dip2px(36));
-                negativeButton.setLayoutParams(params);
-                negativeButton.setPadding(dip2px(8), 0, dip2px(8), 0);
-                negativeButton.setMinWidth(dip2px(64));
-                negativeButton.setGravity(Gravity.CENTER);
-            } else if (mStyle == Style.STACKED_FULL_WIDTH_BUTTONS) {
-                params = new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        dip2px(48));
-                negativeButton.setLayoutParams(params);
-                negativeButton.setPadding(dip2px(16), 0, dip2px(16), 0);
-                negativeButton.setGravity(Gravity.CENTER_VERTICAL | Gravity.END);
-            }
-            negativeButton.setLayoutParams(params);
-
             int buttonBackgroundResId;
             if (mTheme == Theme.LIGHT) {
                 buttonBackgroundResId = R.drawable.material_design_dialog_button_light_theme;
@@ -528,6 +510,28 @@ public class MaterialDesignDialog {
                 buttonBackgroundResId = R.drawable.material_design_dialog_button_dark_theme;
             }
             negativeButton.setBackgroundResource(buttonBackgroundResId);
+            if (isLollipop()) {
+                negativeButton.setBackgroundResource(android.R.color.transparent);
+            }
+
+            LinearLayout.LayoutParams params = null;
+            if (mStyle == Style.SIDE_BY_SIDE_BUTTONS) {
+                params = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        dip2px(36));
+                negativeButton.setPadding(dip2px(8), 0, dip2px(8), 0);
+                negativeButton.setMinWidth(dip2px(64));
+                negativeButton.setGravity(Gravity.CENTER);
+            } else if (mStyle == Style.STACKED_FULL_WIDTH_BUTTONS) {
+                params = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        dip2px(48));
+                negativeButton.setPadding(dip2px(16), 0, dip2px(16), 0);
+                negativeButton.setGravity(Gravity.CENTER_VERTICAL | Gravity.END);
+            }
+            if (params != null) {
+                negativeButton.setLayoutParams(params);
+            }
 
             negativeButton.setText(text);
             negativeButton.setTextSize(14);
@@ -541,10 +545,6 @@ public class MaterialDesignDialog {
             negativeButton.setTextColor(textColor);
 
             negativeButton.setOnClickListener(listener);
-
-            if (isLollipop()) {
-                negativeButton.setBackgroundResource(android.R.color.transparent);
-            }
 
             if (mButtonLayout.getChildCount() > 0) {
                 if (mStyle == Style.SIDE_BY_SIDE_BUTTONS) {

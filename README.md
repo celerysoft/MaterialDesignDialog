@@ -2,7 +2,7 @@
 
 **Note**
 
-**Material Design Dialog is Deprecated, please use [AppCompatDialog](http://developer.android.com/reference/android/support/v7/app/AppCompatDialog.html) to instead of**
+**Material Design Dialog is Deprecated, please use [AppCompatDialog](http://developer.android.com/reference/android/support/v7/app/AppCompatDialog.html) to instead of.**
 
 ## What is it?
 
