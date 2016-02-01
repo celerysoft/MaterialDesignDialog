@@ -30,7 +30,7 @@ Enabling you to use Material Design dialogs down to API 14
 
 ```
 dependencies {
-        compile 'com.celerysoft:materialdesigndialog:1.0.1'
+        compile 'com.celerysoft:materialdesigndialog:1.0.2'
 }
 ```
 
